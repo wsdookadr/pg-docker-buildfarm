@@ -15,7 +15,7 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 RUN apt-get install -y openssh-server wget
 RUN apt-get install -y apt-utils
 
-RUN apt-get install -y gcc g++
+RUN apt-get install -y gcc g++ make autoconf automake
 RUN apt-get install -y git-core
 
 # Enable X11Forwarding

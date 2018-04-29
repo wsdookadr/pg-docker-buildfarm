@@ -10,5 +10,6 @@ and get reports with the results of the tests on all the versions tested.
 Usage
 
     git clone https://github.com/postgres/postgres
-    docker build 
-
+    docker build -f ./Dockerfile -t pg-test .
+    docker create --name pg-9.6.2 pg-test
+    docker start pg-9.6.2
