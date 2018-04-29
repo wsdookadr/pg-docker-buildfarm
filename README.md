@@ -1,0 +1,14 @@
+This repository creates a testing environment to test PostgreSQL features over
+a large number of major and minor PostgreSQL versions.
+
+First, it creates docker containers for multiple different versions of Pg.
+Then, inside each of them a Pg version is built.
+
+At the end, you can run a number of different tests against different Pg versions
+and get reports with the results of the tests on all the versions tested.
+
+Usage
+
+    git clone https://github.com/postgres/postgres
+    docker build 
+
