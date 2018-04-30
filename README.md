@@ -19,6 +19,9 @@ started inside each of them.
 Then you can run a test suite over multiple Pg versions and then build reports based
 on Pg logs to see how your test case behaved on different versions.
 
+On these containers **/var/lib/postgresql/** is the datadir for Pg, and the logs are stored in
+**/var/log/postgresql/logfile** .
+
 Usage
 =====
     
@@ -43,9 +46,12 @@ Misc
 
 The naming convention for containers is `pg-<x.y.z>` if they contain version `x.y.z` of PostgreSQL.
 
-Other
-=====
+Other similar projects
+======================
 
-On these containers **/var/lib/postgresql/** is the datadir for Pg, and the logs are stored in
-**/var/log/postgresql/logfile** .
+This project can be run on a single machine. I believe the official PostgreSQL
+[build farm can be found here](https://github.com/PGBuildFarm). But I imagine it must be
+more complicated to set up (probably can do more things as well).
+
+
 
