@@ -47,6 +47,8 @@ Misc
 
 The naming convention for containers is `pg-<x.y.z>` if they contain version `x.y.z` of PostgreSQL.
 
+This project was tested on Ubuntu 16.04.2 using Docker 17.05.0-ce.
+
 Other similar projects
 ----------------------
 
