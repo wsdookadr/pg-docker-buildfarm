@@ -26,7 +26,6 @@ case "$1" in
     make_pg)
         # Builds the PostgreSQL on each of the containers
         # (each container should have a different version of PostgreSQL)
-
         for ver in "${versions[@]}"; do
             git_tag="REL"$(echo $ver | sed -e 's/\./_/g')
             git_branch="rel-$ver"
@@ -38,7 +37,11 @@ case "$1" in
         # Creates the PostgreSQL cluster (data directory) on all
         # the containers.
         for ver in "${versions[@]}"; do
+            docker exec -t -i pg-$ver bash -c 'rm -rf /var/lib/postgresql/; mkdir /var/lib/postgresql/; chown -R postgres:postgres /var/lib/postgresql/'
+
             docker exec -u postgres -t -i pg-$ver bash -c '/usr/local/pgsql/bin/pg_ctl init -D /var/lib/postgresql/'
+            docker cp postgresql.custom.conf pg-$ver:/var/lib/postgresql/postgresql.conf
+            docker exec -t -i pg-$ver chown postgres:postgres /var/lib/postgresql/postgresql.conf
         done
         ;;
     shell_pg)
@@ -56,8 +59,6 @@ case "$1" in
         # (also provide them with the right config file using postgresql.custom.conf)
         for ver in "${versions[@]}"; do
             echo "Starting pg on container pg-$ver"
-            docker cp postgresql.custom.conf pg-$ver:/var/lib/postgresql/postgresql.conf
-            docker exec -t -i pg-$ver chown postgres:postgres /var/lib/postgresql/postgresql.conf
             docker exec -u postgres -d -t -i pg-$ver bash -c 'nohup /usr/local/pgsql/bin/pg_ctl -D /var/lib/postgresql -l /var/log/postgresql/logfile start'
         done
         ;;
