@@ -1,4 +1,7 @@
 --
+--
+--
+--
 -- This will test if current_setting and set_setting
 -- provide a way to persist data when used in a function
 -- that is used to build an expression index using CREATE INDEX
@@ -77,7 +80,7 @@ END;
 $$;
 
 
-
+DROP TABLE IF EXISTS test_table;
 CREATE TABLE test_table (
     c1 TEXT
 ); 
