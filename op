@@ -1,19 +1,31 @@
 #!/bin/bash
+declare -a versions=("9.6.0" "9.6.1" "9.6.2" "9.6.3" "9.6.4" "9.6.5" "9.6.6" "9.6.7" "9.6.8")
 
 case "$1" in
-    build_image)
+    make_image)
         docker build -f ./Dockerfile -t pg-test .
         ;;
-    build_containers)
-        docker create --name pg-9.6.0 pg-test
-        docker create --name pg-9.6.1 pg-test
-        docker create --name pg-9.6.2 pg-test
-        docker create --name pg-9.6.3 pg-test
-        docker create --name pg-9.6.4 pg-test
-        docker create --name pg-9.6.5 pg-test
-        docker create --name pg-9.6.6 pg-test
-        docker create --name pg-9.6.7 pg-test
-        docker create --name pg-9.6.8 pg-test
+    make_containers)
+        for ver in "${versions[@]}"; do
+            echo "Making pg-$ver"
+            docker create --name "pg-$ver" pg-test
+            docker start "pg-$ver"
+        done
+        ;;
+    rm_containers)
+        for ver in "${versions[@]}"; do
+            docker stop "pg-$ver"
+            docker rm "pg-$ver"
+        done
+        ;;
+    make_pg)
+        #for ver in "${versions[@]}"; do
+        for ver in "9.6.1" "9.6.2" "9.6.3" "9.6.4" "9.6.5" "9.6.6" "9.6.7" "9.6.8"; do
+            git_tag="REL"$(echo $ver | sed -e 's/\./_/g')
+            git_branch="rel-$ver"
+            docker exec -t -i "pg-$ver" bash -c "cd /root/postgres; git checkout -b $git_branch $git_tag"
+            docker exec -d -t -i "pg-$ver" bash -c "cd /root/postgres; autoreconf -i; ./configure ; make ; make install;"
+        done
         ;;
     *)
         echo "none"
