@@ -4,19 +4,20 @@ Use-case
 You want to run sql/plpgsql code on multiple versions of PostgreSQL to see
 how it performs on all of them.
           
-This software allows you to create a build farm using docker containers with
-multiple versions of PostgreSQL on each of them. The builds will be made using
-the PostgreSQL source from upstream.
+This software allows you to create a build farm using docker containers
+with a different PostgreSQL version on each container. The builds will
+be made using the PostgreSQL source from upstream.
 
-This repository creates a testing environment to test PostgreSQL features over
-a number of major and minor PostgreSQL versions.
+This can be used as a testing environment to test PostgreSQL
+features/queries/sql/plpgsql over multiple different major and minor
+PostgreSQL versions.
 
 First, it creates docker containers pre-provisioned with the PostgreSQL source code.
 Then, inside each of them, the appropriate Pg version is built, and then a Pg server is
 started inside each of them.
 
-Then you can run a test suite over multiple Pg versions and then create reports based
-on Pg logs to see how your test case on different versions.
+Then you can run a test suite over multiple Pg versions and then build reports based
+on Pg logs to see how your test case behaved on different versions.
 
 Usage
 =====
