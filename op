@@ -1,0 +1,21 @@
+#!/bin/bash
+
+case "$1" in
+    build_image)
+        docker build -f ./Dockerfile -t pg-test .
+        ;;
+    build_containers)
+        docker create --name pg-9.6.0 pg-test
+        docker create --name pg-9.6.1 pg-test
+        docker create --name pg-9.6.2 pg-test
+        docker create --name pg-9.6.3 pg-test
+        docker create --name pg-9.6.4 pg-test
+        docker create --name pg-9.6.5 pg-test
+        docker create --name pg-9.6.6 pg-test
+        docker create --name pg-9.6.7 pg-test
+        docker create --name pg-9.6.8 pg-test
+        ;;
+    *)
+        echo "none"
+        ;;
+esac

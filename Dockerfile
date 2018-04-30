@@ -12,15 +12,22 @@ RUN echo "America/Los_Angeles" > /etc/timezone
 RUN dpkg-reconfigure -f noninteractive tzdata
 
 # We need ssh to access the instance, and wget to download skype
-RUN apt-get install -y openssh-server wget
-RUN apt-get install -y apt-utils
+RUN apt-get -y install openssh-server wget
+RUN apt-get -y install apt-utils
 
 # Install compiler, and build tools
-RUN apt-get install -y gcc g++ make autoconf automake
-RUN apt-get install -y git-core
+RUN apt-get -y install gcc g++ make autoconf automake
+RUN apt-get -y install git-core
 
 # Install more Pg deps
-RUN apt-get install libreadline-dev bison flex zlib1g-dev libxml2-dev libxml2-utils docbook
+RUN apt-get -y install libreadline-dev bison flex zlib1g-dev libxml2-dev libxml2-utils docbook
+
+# Add the new user called postgres
+RUN useradd -ms /bin/bash postgres
+
+RUN mkdir /var/log/postgresql /var/lib/postgresql /usr/local/pgsql
+
+RUN chown -R postgres:postgres /var/log/postgresql /var/lib/postgresql /usr/local/pgsql
 
 # Check out PostgreSQL's source code
 RUN cd /root ; git clone https://github.com/postgres/postgres
