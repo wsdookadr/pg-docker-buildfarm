@@ -1,13 +1,17 @@
 #!/bin/bash
+#
 # We create two databases, p1 and p2.
 # We provision the first database p1 with the sql script config-setting-persistence-index.sql.
 # In order to reproduce, we then dump db p1 into /home/postgres/p1.dmp
 # We then restore p2 from p1.dmp
-# The aim is to see what kinds of log messages we find inside /var/log/postgresql/logfile, specifically
+#
+# The goal is to check the log messages inside /var/log/postgresql/logfile, specifically
 # the ones produced by pg_restore when it reaches the CREATE INDEX statement
 # that is contained inside p1.dmp
-# 
-
+# We have some debug messages that are generated via RAISE LOG, and we want to count
+# those in order to build a report that will tell us more about the behaviour of our test
+# case over multiple Pg versions.
+#
 rm /home/postgres/p1.dmp
 
 /usr/local/pgsql/bin/dropdb p1
