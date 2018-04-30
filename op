@@ -73,6 +73,7 @@ case "$1" in
             docker exec -t -i pg-$ver rm -rf /home/postgres/t/
             docker cp t/ pg-$ver:/home/postgres/
             docker exec -t -i pg-$ver chown -R postgres:postgres /home/postgres/t/
+            echo "Running tests on container pg-$ver"
             docker exec -u postgres -t -i pg-$ver bash /home/postgres/t/config-setting-persistence-index.sh
         done
         ;;
