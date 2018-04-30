@@ -16,7 +16,7 @@
 CREATE OR REPLACE FUNCTION public.isempty(input character varying) RETURNS boolean
 LANGUAGE sql IMMUTABLE
 AS $$
-SELECT input IS NULL OR input = '';
+SELECT input IS NULL OR input = ''; 
 $$;
 
 
@@ -32,22 +32,38 @@ BEGIN
     BEGIN
         SELECT current_setting('prefix.persist') INTO STRICT persist;
         IF isempty(persist) THEN
-            RAISE LOG 'prefix.persist was not set';
-            RAISE NOTICE 'prefix.persist was not set';
             RAISE EXCEPTION 'persist session variable not set';
         ELSE
             RAISE NOTICE 'prefix.persist was set';
             RAISE LOG 'prefix.persist was set';
-        END IF;
+        END IF; 
 
-        RETURN '';
+        RETURN ''; 
     EXCEPTION
         WHEN OTHERS THEN
+
+        RAISE LOG 'prefix.persist was not set';
+        RAISE NOTICE 'prefix.persist was not set';
         PERFORM set_config('prefix.persist', 'value',false);
-        RETURN '';
+        RETURN ''; 
     END;
 
 END;
 $$;
+
+
+
+CREATE TABLE test_table (
+    c1 TEXT
+); 
+
+INSERT INTO test_table(c1) VALUES('a');
+INSERT INTO test_table(c1) VALUES('ab');
+INSERT INTO test_table(c1) VALUES('abc');
+INSERT INTO test_table(c1) VALUES('abcd');
+INSERT INTO test_table(c1) VALUES('abcde');
+INSERT INTO test_table(c1) VALUES('abcdef');
+
+CREATE INDEX test_idx ON test_table (test1(c1));
 
 
