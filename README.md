@@ -35,7 +35,8 @@ Usage
     ./op run_tests # runs the tests we have lined up in the ./t/ directory on all
                    # the containers
 
-    ./op report # get a report for each of the tests
+    ./op report # get a report from each of the containers for 
+                # all the tests that were run
 
 Misc
 ====
@@ -49,9 +50,10 @@ The naming convention for containers is `pg-<x.y.z>` if they contain version `x.
 Other similar projects
 ======================
 
-This project can be run on a single machine. I believe the official PostgreSQL
-[build farm can be found here](https://github.com/PGBuildFarm). But I imagine it must be
-more complicated to set up (probably can do more things as well).
+`pg-docker-buildfarm` can be run on a single
+machine. The official PostgreSQL [build farm can be found
+here](https://github.com/PGBuildFarm). I haven't tried it but I imagine it
+must be more complicated to set up (probably can do more things as well).
 
 
 
