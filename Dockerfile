@@ -15,14 +15,15 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 RUN apt-get install -y openssh-server wget
 RUN apt-get install -y apt-utils
 
+# Install compiler, and build tools
 RUN apt-get install -y gcc g++ make autoconf automake
 RUN apt-get install -y git-core
 
+# Install more Pg deps
+RUN apt-get install libreadline-dev bison flex zlib1g-dev libxml2-dev libxml2-utils docbook
+
 # Check out PostgreSQL's source code
 RUN cd /root ; git clone https://github.com/postgres/postgres
-
-# install more Pg deps
-RUN apt-get install libreadline-dev bison flex
 
 # Enable X11Forwarding
 RUN echo X11Forwarding yes >> /etc/ssh/ssh_config
