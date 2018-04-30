@@ -41,6 +41,7 @@ Misc
                         # under the postgres user
     ./op shell_root 9.6.8 # same as before but with the root user
 
+The naming convention for containers is `pg-<x.y.z>` if they contain version `x.y.z` of PostgreSQL.
 
 Other
 =====
