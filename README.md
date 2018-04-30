@@ -13,3 +13,11 @@ Usage
     docker build -f ./Dockerfile -t pg-test .
     docker create --name pg-9.6.2 pg-test
     docker start pg-9.6.2
+
+
+To list all the tags do 
+    git tag
+
+then to check out a specific tag into a new
+branch do
+    git checkout -b rel-9.6.2 REL9_6_2

@@ -18,6 +18,12 @@ RUN apt-get install -y apt-utils
 RUN apt-get install -y gcc g++ make autoconf automake
 RUN apt-get install -y git-core
 
+# Check out PostgreSQL's source code
+RUN cd /root ; git clone https://github.com/postgres/postgres
+
+# install more Pg deps
+RUN apt-get install libreadline-dev bison flex
+
 # Enable X11Forwarding
 RUN echo X11Forwarding yes >> /etc/ssh/ssh_config
 RUN mkdir -p /var/run/sshd
