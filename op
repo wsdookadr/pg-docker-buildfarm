@@ -25,7 +25,6 @@ case "$1" in
         # Builds the PostgreSQL on each of the containers
         # (each container should have a different version of PostgreSQL)
 
-        #for ver in "${versions[@]}"; do
         for ver in "${versions[@]}"; do
             git_tag="REL"$(echo $ver | sed -e 's/\./_/g')
             git_branch="rel-$ver"
