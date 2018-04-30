@@ -3,9 +3,11 @@ declare -a versions=("9.6.0" "9.6.1" "9.6.2" "9.6.3" "9.6.4" "9.6.5" "9.6.6" "9.
 
 case "$1" in
     make_image)
+        # Build the image called "pg-test" from the Dockerfile
         docker build -f ./Dockerfile -t pg-test .
         ;;
     make_containers)
+        # Create containers using the "pg-test" image that was created
         for ver in "${versions[@]}"; do
             echo "Making pg-$ver"
             docker create --name "pg-$ver" pg-test
@@ -13,21 +15,48 @@ case "$1" in
         done
         ;;
     rm_containers)
+        # Delete all containers
         for ver in "${versions[@]}"; do
             docker stop "pg-$ver"
             docker rm "pg-$ver"
         done
         ;;
     make_pg)
+        # Builds the PostgreSQL on each of the containers
+        # (each container should have a different version of PostgreSQL)
+
         #for ver in "${versions[@]}"; do
-        for ver in "9.6.1" "9.6.2" "9.6.3" "9.6.4" "9.6.5" "9.6.6" "9.6.7" "9.6.8"; do
+        for ver in "${versions[@]}"; do
             git_tag="REL"$(echo $ver | sed -e 's/\./_/g')
             git_branch="rel-$ver"
             docker exec -t -i "pg-$ver" bash -c "cd /root/postgres; git checkout -b $git_branch $git_tag"
             docker exec -d -t -i "pg-$ver" bash -c "cd /root/postgres; autoreconf -i; ./configure ; make ; make install;"
         done
         ;;
+    make_pg_cluster)
+        # Creates the PostgreSQL cluster (data directory) on all
+        # the containers.
+        for ver in "${versions[@]}"; do
+            docker exec -u postgres -t -i pg-$ver bash -c '/usr/local/pgsql/bin/pg_ctl init -D /var/lib/postgresql/'
+        done
+        ;;
+    start_pg)
+        # Starts the PostgreSQL server on all the containers
+        for ver in "${versions[@]}"; do
+            echo "Starting pg on container pg-$ver"
+            docker exec -u postgres -d -t -i pg-$ver bash -c 'nohup /usr/local/pgsql/bin/pg_ctl -D /var/lib/postgresql -l /var/log/postgresql/logfile start'
+        done
+        ;;
+    stop_pg)
+        for ver in "${versions[@]}"; do
+            echo "Stopping pg on container pg-$ver"
+            docker exec -u postgres -t -i pg-$ver bash -c '/usr/local/pgsql/bin/pg_ctl stop -D /var/lib/postgresql'
+        done
+        ;;
     *)
         echo "none"
         ;;
 esac
+
+
+
