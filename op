@@ -66,8 +66,9 @@ case "$1" in
             docker exec -u postgres -t -i pg-$ver bash -c '/usr/local/pgsql/bin/pg_ctl stop -D /var/lib/postgresql'
         done
         ;;
-    run_test)
-        for ver in "9.6.8"; do
+    run_tests)
+        for ver in "${versions[@]}"; do
+        #for ver in "9.6.8"; do
             echo "Provisioning container pg-$ver to run tests"
             docker exec -t -i pg-$ver rm -rf /home/postgres/t/
             docker cp t/ pg-$ver:/home/postgres/
