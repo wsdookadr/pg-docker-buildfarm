@@ -1,5 +1,5 @@
 Use-case
-========
+--------
 
 You want to run sql/plpgsql code on multiple versions of PostgreSQL to see
 how it performs on all of them.
@@ -23,7 +23,7 @@ On these containers **/var/lib/postgresql/** is the datadir for Pg, and the logs
 **/var/log/postgresql/logfile** .
 
 Usage
-=====
+-----
     
     ./op make_image # build common docker image used for all containers
     ./op make_containers # create all the containers from the image we just made
@@ -39,7 +39,7 @@ Usage
                 # all the tests that were run
 
 Misc
-====
+----
 
     ./op shell_pg 9.6.8 # gives you a shell to the docker container that's running version 9.6.8
                         # under the postgres user
@@ -48,12 +48,18 @@ Misc
 The naming convention for containers is `pg-<x.y.z>` if they contain version `x.y.z` of PostgreSQL.
 
 Other similar projects
-======================
+----------------------
 
 `pg-docker-buildfarm` can be run on a single
 machine. The official PostgreSQL [build farm can be found
 here](https://github.com/PGBuildFarm). I haven't tried it but I imagine it
 must be more complicated to set up (probably can do more things as well).
+
+Contributing
+------------
+
+You are welcome to send [pull requests](https://github.com/wsdookadr/pg-docker-buildfarm/pulls)
+with enhancements or fixes to this project.
 
 
 
