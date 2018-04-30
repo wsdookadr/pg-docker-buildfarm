@@ -1,0 +1,40 @@
+Report for the test config-setting-persistence-index
+====================================================
+[config-setting-persistence-index] Result for pg-9.5.0
+1
+[config-setting-persistence-index] Result for pg-9.5.1
+1
+[config-setting-persistence-index] Result for pg-9.5.2
+1
+[config-setting-persistence-index] Result for pg-9.5.3
+1
+[config-setting-persistence-index] Result for pg-9.5.4
+1
+[config-setting-persistence-index] Result for pg-9.5.5
+1
+[config-setting-persistence-index] Result for pg-9.5.6
+1
+[config-setting-persistence-index] Result for pg-9.5.7
+1
+[config-setting-persistence-index] Result for pg-9.5.8
+1
+[config-setting-persistence-index] Result for pg-9.5.9
+1
+[config-setting-persistence-index] Result for pg-9.6.0
+1
+[config-setting-persistence-index] Result for pg-9.6.1
+1
+[config-setting-persistence-index] Result for pg-9.6.2
+1
+[config-setting-persistence-index] Result for pg-9.6.3
+1
+[config-setting-persistence-index] Result for pg-9.6.4
+1
+[config-setting-persistence-index] Result for pg-9.6.5
+1
+[config-setting-persistence-index] Result for pg-9.6.6
+1
+[config-setting-persistence-index] Result for pg-9.6.7
+1
+[config-setting-persistence-index] Result for pg-9.6.8
+6
