@@ -13,11 +13,11 @@
 --
 
 
-CREATE OR REPLACE FUNCTION public.isempty(p_string character varying) RETURNS boolean
+CREATE OR REPLACE FUNCTION public.isempty(input character varying) RETURNS boolean
 LANGUAGE sql IMMUTABLE
 AS $$
 SELECT input IS NULL OR input = '';
-$$
+$$;
 
 
 
@@ -25,18 +25,26 @@ CREATE OR REPLACE FUNCTION public.test1(p_string character varying) RETURNS char
 LANGUAGE plpgsql IMMUTABLE
 AS $$
 
-persist TEXT;
 DECLARE
-
+persist TEXT;
 BEGIN
 
     BEGIN
         SELECT current_setting('prefix.persist') INTO STRICT persist;
-        IF isempty('persist')
+        IF isempty(persist) THEN
+            RAISE LOG 'prefix.persist was not set';
+            RAISE NOTICE 'prefix.persist was not set';
             RAISE EXCEPTION 'persist session variable not set';
+        ELSE
+            RAISE NOTICE 'prefix.persist was set';
+            RAISE LOG 'prefix.persist was set';
         END IF;
+
+        RETURN '';
     EXCEPTION
+        WHEN OTHERS THEN
         PERFORM set_config('prefix.persist', 'value',false);
+        RETURN '';
     END;
 
 END;

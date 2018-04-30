@@ -6,7 +6,7 @@ Use-case: You want to run sql/plpgsql code on multiple versions of PostgreSQL to
           the PostgreSQL source from upstream.
 
 This repository creates a testing environment to test PostgreSQL features over
-a large number of major and minor PostgreSQL versions.
+a number of major and minor PostgreSQL versions.
 
 First, it creates docker containers for multiple different versions of Pg.
 Then, inside each of them a Pg version is built.
