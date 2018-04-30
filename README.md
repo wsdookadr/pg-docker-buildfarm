@@ -46,6 +46,6 @@ The naming convention for containers is `pg-<x.y.z>` if they contain version `x.
 Other
 =====
 
-On these containers */var/lib/postgresql/* is the datadir for Pg, and the logs are stored in
-*/var/log/postgresql/logfile* .
+On these containers **/var/lib/postgresql/** is the datadir for Pg, and the logs are stored in
+**/var/log/postgresql/logfile** .
 
