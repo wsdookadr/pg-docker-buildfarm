@@ -40,10 +40,22 @@ case "$1" in
             docker exec -u postgres -t -i pg-$ver bash -c '/usr/local/pgsql/bin/pg_ctl init -D /var/lib/postgresql/'
         done
         ;;
+    shell_pg)
+        # Get a shell to a certain container
+        # Ex: ./op shell_pg 9.6.8
+        docker exec -u postgres -t -i pg-$2 bash
+        ;;
+    shell_root)
+        # Get a shell to a certain container
+        # Ex: ./op shell_pg 9.6.8
+        docker exec -t -i pg-$2 bash
+        ;;
     start_pg)
         # Starts the PostgreSQL server on all the containers
         for ver in "${versions[@]}"; do
             echo "Starting pg on container pg-$ver"
+            docker cp postgresql.custom.conf pg-$ver:/var/lib/postgresql/postgresql.conf
+            docker exec -t -i pg-$ver chown postgres:postgres /var/lib/postgresql/postgresql.conf
             docker exec -u postgres -d -t -i pg-$ver bash -c 'nohup /usr/local/pgsql/bin/pg_ctl -D /var/lib/postgresql -l /var/log/postgresql/logfile start'
         done
         ;;

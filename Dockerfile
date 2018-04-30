@@ -17,7 +17,7 @@ RUN apt-get -y install apt-utils
 
 # Install compiler, and build tools
 RUN apt-get -y install gcc g++ make autoconf automake
-RUN apt-get -y install git-core tmux
+RUN apt-get -y install git-core tmux vim
 
 # Install more Pg deps
 RUN apt-get -y install libreadline-dev bison flex zlib1g-dev libxml2-dev libxml2-utils docbook
