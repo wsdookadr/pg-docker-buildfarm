@@ -20,6 +20,6 @@ rm /home/postgres/p1.dmp
 /usr/local/pgsql/bin/pg_dump -Fc -d p1 -f /home/postgres/p1.dmp
 
 PGAPPNAME="restore_start" /usr/local/pgsql/bin/psql -d p2 -c 'SELECT 1;'
-PGAPPNAME="restore_run" /usr/local/pgsql/bin/pg_restore -v --no-acl --no-owner -d p2 ~/p2.dmp
+PGAPPNAME="restore_run" /usr/local/pgsql/bin/pg_restore -v --no-acl --no-owner -d p2 ~/p1.dmp
 PGAPPNAME="restore_end" /usr/local/pgsql/bin/psql -d p2 -c 'SELECT 1;'
 
