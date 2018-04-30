@@ -81,6 +81,8 @@ case "$1" in
         done
         ;;
     report)
+        exec &> >(tee "t/config-setting-persistence-index.report.txt")
+
         echo "Report for the test config-setting-persistence-index"
         echo "===================================================="
         for ver in "${versions[@]}"; do
