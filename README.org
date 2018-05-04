@@ -1,0 +1,75 @@
+* Use-case
+
+You want to run sql/plpgsql code on multiple versions of PostgreSQL to
+see how it performs on all of them.
+          
+This software allows you to create a build farm using docker
+containers with a different PostgreSQL version on each container. The
+builds will be made using the PostgreSQL source from upstream.
+
+This can be used as a testing environment to test PostgreSQL
+features/queries/sql/plpgsql over multiple different major and minor
+PostgreSQL versions.
+
+First, it creates docker containers pre-provisioned with the
+PostgreSQL source code.  Then, inside each of them, the appropriate Pg
+version is built, and then a Pg server is started inside each of them.
+
+Then you can run a test suite over multiple Pg versions and then build
+reports based on Pg logs to see how your test case behaved on
+different versions. 
+
+This can help if you're trying to isolate a problem, reproduce it and
+then create a [[https://stackoverflow.com/help/mcve][MCVE]] (or [[http://sscce.org/][SSCCE]] if you will) so you can share it in a
+reduced form with others.
+
+On these containers */var/lib/postgresql/* is the datadir for Pg, and
+the logs are stored in */var/log/postgresql/logfile* .
+
+* Usage
+
+#+BEGIN_SRC sh
+    ./op make_image # build common docker image used for all containers
+    ./op make_containers # create all the containers from the image we just made
+    ./op make_pg # builds PostgreSQL with different versions on all the containers
+    ./op make_pg_cluster # basically runs initdb on each container to create a data
+                         # directory, and also provisions them with a postgresql.conf
+                         # config file
+    ./op start_pg # starts the PostgreSQL server on all containers
+    ./op run_tests # runs the tests we have lined up in the ./t/ directory on all
+                   # the containers
+
+    ./op report # get a report from each of the containers for 
+                # all the tests that were run
+#+END_SRC
+    
+
+* Misc
+
+#+BEGIN_SRC sh
+    ./op shell_pg 9.6.8 # gives you a shell to the docker container that's running version 9.6.8
+                        # under the postgres user
+    ./op shell_root 9.6.8 # same as before but with the root user
+#+END_SRC
+
+The naming convention for containers is =pg-<x.y.z>= if they contain
+version =x.y.z= of PostgreSQL.
+
+This project was tested on Ubuntu =16.04.2= using Docker =17.05.0-ce=.
+
+Inside the [[https://github.com/wsdookadr/pg-docker-buildfarm/blob/master/op][op]] script you may want to limit the number of versions you
+run on by modifying the array =versions= at the beginning of the
+script.
+
+* Other similar projects
+
+=pg-docker-buildfarm= can be run on a single
+machine. The official PostgreSQL [[https://github.com/PGBuildFarm][build farm can be found here]]. I haven't tried it but I imagine it
+must be more complicated to set up (probably can do more things as well).
+
+* Contributing
+
+You are welcome to send [[https://github.com/wsdookadr/pg-docker-buildfarm/pulls][pull requests]] with enhancements or fixes to
+this project.
+
+
