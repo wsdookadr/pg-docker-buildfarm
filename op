@@ -7,6 +7,7 @@
 declare -a v9_4=("9.4.0" "9.4.1" "9.4.2" "9.4.3" "9.4.4" "9.4.5" "9.4.6" "9.4.7" "9.4.8" "9.4.9")
 declare -a v9_5=("9.5.0" "9.5.1" "9.5.2" "9.5.3" "9.5.4" "9.5.5" "9.5.6" "9.5.7" "9.5.8" "9.5.9")
 declare -a v9_6=("9.6.0" "9.6.1" "9.6.2" "9.6.3" "9.6.4" "9.6.5" "9.6.6" "9.6.7" "9.6.8")
+#declare -a versions=( "${v9_4[@]}")
 declare -a versions=( "${v9_5[@]}" "${v9_6[@]}" )
 
 #
@@ -37,6 +38,18 @@ extract_latest_pgrestore_logs() {
 }
 
 case "$1" in
+    run)
+        # Run a command on all containers
+        # Example: ./op run /bin/ls /usr/local/pgsql/bin/psql
+
+        # Leave only the command and args to run in $@
+        shift 1
+        for ver in "${versions[@]}"; do
+            echo "Running for pg-$ver"
+            cmd=$(IFS=$' '; echo "${@}" )
+            docker exec -t -i "pg-$ver" bash -c "$cmd"
+        done
+        ;;
     make_image)
         # Build the image called "pg-test" from the Dockerfile
         docker build -f ./Dockerfile -t pg-test .

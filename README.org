@@ -81,8 +81,22 @@ Travis does have its merits as a generic, one-size-fits-all continous
 integration solution.
 
 * Contributing
-
 You are welcome to send [[https://github.com/wsdookadr/pg-docker-buildfarm/pulls][pull requests]] with enhancements or fixes to
 this project.
 
+* Known issues
+** TODO build problem with flex on Pg 9.4.{0,1,2,3,4,5}
+The Debian version used in the container is 9.4.
+This is about the Pg build 9.4.0.
+
+The flex version check inside the configure script has a bug
+(it checks for >= 2.5.31 , and the version in the container is 2.6.1, still
+throws error about version constraint not being met):
+
+#+BEGIN_SRC sh
+if echo "$pgac_flex_version" | sed 's/[.a-z]/ /g' | $AWK '{ if ($1 = 2 && $2 = 5 && $3 >= 31) exit 0; else exit 1;}'
+#+END_SRC
+
+An easy fix here is to just replace that line with the 2.6.1 that's on
+Debian in that container, only for Pg 9.4.{0,1,2,3,4,5}
 
