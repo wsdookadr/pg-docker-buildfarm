@@ -1,4 +1,4 @@
-* Use-case
+* Use case
 
 You want to run sql/plpgsql code on multiple versions of PostgreSQL to
 see how it performs on all of them.
@@ -42,7 +42,6 @@ the logs are stored in */var/log/postgresql/logfile* .
     ./op report # get a report from each of the containers for 
                 # all the tests that were run
 #+END_SRC
-    
 
 * Misc
 
@@ -61,11 +60,25 @@ Inside the [[https://github.com/wsdookadr/pg-docker-buildfarm/blob/master/op][op
 run on by modifying the array =versions= at the beginning of the
 script.
 
-* Other similar projects
+* FAQ
 
-=pg-docker-buildfarm= can be run on a single
-machine. The official PostgreSQL [[https://github.com/PGBuildFarm][build farm can be found here]]. I haven't tried it but I imagine it
-must be more complicated to set up (probably can do more things as well).
+- Q1) Why didn't you just use the PostgreSQL build farm?
+
+=pg-docker-buildfarm= can be run on a single machine, it's not a
+distributed build farm. 
+
+The official PostgreSQL [[https://github.com/PGBuildFarm][build farm can be found here]]. 
+
+I haven't tried it but I imagine it must be more complicated to set up
+(probably can do more things as well).
+
+- Q2) Why didn't you just use Travis-CI for this?
+
+A: [[https://docs.travis-ci.com/user/database-setup/#PostgreSQL][Travis doesn't provide]], as far as I know, support for minor
+versions of PostgreSQL.  Also, maybe you want to run your code on a
+release candidate, that's also not available in Travis. However,
+Travis does have its merits as a generic, one-size-fits-all continous
+integration solution.
 
 * Contributing
 
