@@ -1,4 +1,4 @@
-FROM debian:stable
+FROM debian:9.4
 
 MAINTAINER Me "me@me.com"
 

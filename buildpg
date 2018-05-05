@@ -1,0 +1,8 @@
+#!/bin/bash
+cd /root/postgres
+autoreconf -i
+# fix problem with flex version check on 9.4.{0,1,2,3,4,5}
+perl -p -i -e "s{.1 = 2 && .2 = 5 && .3 >= 31}{\\\$1 = 2 && \\\$2 = 6 && \\\$3 >= 1}g;" configure
+./configure
+make
+make install

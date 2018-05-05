@@ -3,6 +3,16 @@ Report for the test config-setting-persistence-index
 Note: we're counting the lines "prefix.persist was not set" found in server logs
 for the last pg_restore operation
 
+pg-9.4.0,1
+pg-9.4.1,1
+pg-9.4.2,1
+pg-9.4.3,1
+pg-9.4.4,1
+pg-9.4.5,1
+pg-9.4.6,1
+pg-9.4.7,1
+pg-9.4.8,1
+pg-9.4.9,1
 pg-9.5.0,1
 pg-9.5.1,1
 pg-9.5.2,1
