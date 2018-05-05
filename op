@@ -1,5 +1,13 @@
 #!/bin/bash
-declare -a versions=("9.5.0" "9.5.1" "9.5.2" "9.5.3" "9.5.4" "9.5.5" "9.5.6" "9.5.7" "9.5.8" "9.5.9" "9.6.0" "9.6.1" "9.6.2" "9.6.3" "9.6.4" "9.6.5" "9.6.6" "9.6.7" "9.6.8")
+#
+# This is the list of Pg versions that we'll build
+# and create containers for.
+#
+
+declare -a v9_4=("9.4.0" "9.4.1" "9.4.2" "9.4.3" "9.4.4" "9.4.5" "9.4.6" "9.4.7" "9.4.8" "9.4.9")
+declare -a v9_5=("9.5.0" "9.5.1" "9.5.2" "9.5.3" "9.5.4" "9.5.5" "9.5.6" "9.5.7" "9.5.8" "9.5.9")
+declare -a v9_6=("9.6.0" "9.6.1" "9.6.2" "9.6.3" "9.6.4" "9.6.5" "9.6.6" "9.6.7" "9.6.8")
+declare -a versions=( "${v9_5[@]}" "${v9_6[@]}" )
 
 #
 # This function is intended to extract from the Pg server logs, the latest
@@ -41,6 +49,18 @@ case "$1" in
             docker start "pg-$ver"
         done
         ;;
+    start_containers)
+        for ver in "${versions[@]}"; do
+            echo "Starting container pg-$ver"
+            docker start "pg-$ver"
+        done
+        ;;
+    stop_containers)
+        for ver in "${versions[@]}"; do
+            echo "Stopping container pg-$ver"
+            docker stop "pg-$ver"
+        done
+        ;;
     rm_containers)
         # Delete all containers
         for ver in "${versions[@]}"; do
@@ -52,6 +72,7 @@ case "$1" in
         # Builds the PostgreSQL on each of the containers
         # (each container should have a different version of PostgreSQL)
         for ver in "${versions[@]}"; do
+            # use naming convention for Pg tags for releases
             git_tag="REL"$(echo $ver | sed -e 's/\./_/g')
             git_branch="rel-$ver"
             docker exec -t -i "pg-$ver" bash -c "cd /root/postgres; git checkout -b $git_branch $git_tag"
@@ -112,12 +133,17 @@ case "$1" in
 
         echo "Report for the test config-setting-persistence-index"
         echo "===================================================="
+        echo "Note: we're counting the lines \"prefix.persist was not set\" found in server logs"
+        echo "for the last pg_restore operation"
+        echo ""
         for ver in "${versions[@]}"; do
-            echo "Number of \"prefix.persist was not set\" found in logs for pg-$ver during pg_restore"
+            tmpfile=$(mktemp /tmp/pg.$ver.XXXXX.log)
             docker exec -t -i pg-$ver cat /var/log/postgresql/logfile | \
             grep "LOG:" | \
-            extract_latest_pgrestore_logs | \
-            grep "prefix.persist was not set" | wc -l
+            extract_latest_pgrestore_logs > $tmpfile
+            cnt=$(cat $tmpfile | grep "prefix.persist was not set" | wc -l)
+            echo "pg-$ver,$cnt"
+            rm $tmpfile
         done
         ;;
     *)

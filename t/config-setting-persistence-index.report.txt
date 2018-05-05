@@ -1,40 +1,24 @@
 Report for the test config-setting-persistence-index
 ====================================================
-Number of "prefix.persist was not set" found in logs for pg-9.5.0 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.5.1 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.5.2 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.5.3 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.5.4 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.5.5 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.5.6 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.5.7 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.5.8 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.5.9 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.6.0 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.6.1 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.6.2 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.6.3 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.6.4 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.6.5 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.6.6 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.6.7 during pg_restore
-1
-Number of "prefix.persist was not set" found in logs for pg-9.6.8 during pg_restore
-6
+Note: we're counting the lines "prefix.persist was not set" found in server logs
+for the last pg_restore operation
+
+pg-9.5.0,1
+pg-9.5.1,1
+pg-9.5.2,1
+pg-9.5.3,1
+pg-9.5.4,1
+pg-9.5.5,1
+pg-9.5.6,1
+pg-9.5.7,1
+pg-9.5.8,1
+pg-9.5.9,1
+pg-9.6.0,1
+pg-9.6.1,1
+pg-9.6.2,1
+pg-9.6.3,1
+pg-9.6.4,1
+pg-9.6.5,1
+pg-9.6.6,1
+pg-9.6.7,1
+pg-9.6.8,6
