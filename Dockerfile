@@ -11,16 +11,11 @@ RUN localedef -v -c -i en_US -f UTF-8 en_US.UTF-8 || :
 RUN echo "America/Los_Angeles" > /etc/timezone
 RUN dpkg-reconfigure -f noninteractive tzdata
 
-# We need ssh to access the instance, and wget to download skype
-RUN apt-get -y install openssh-server wget
-RUN apt-get -y install apt-utils
+# Install ssh too in case we need to ssh into the instance
+RUN apt-get -y install openssh-server
 
-# Install compiler, and build tools
-RUN apt-get -y install gcc g++ make autoconf automake
-RUN apt-get -y install git-core tmux vim
-
-# Install more Pg deps
-RUN apt-get -y install libreadline-dev bison flex zlib1g-dev libxml2-dev libxml2-utils docbook
+# Install more compiler tools, and PostgreSQL deps
+RUN apt-get -y install gcc g++ make autoconf automake git-core libreadline-dev bison flex zlib1g-dev libxml2-dev libxml2-utils docbook
 
 # Add the new user called postgres
 RUN useradd -ms /bin/bash postgres
@@ -29,7 +24,7 @@ RUN mkdir /var/log/postgresql /var/lib/postgresql /usr/local/pgsql
 
 RUN chown -R postgres:postgres /var/log/postgresql /var/lib/postgresql /usr/local/pgsql
 
-# Check out PostgreSQL's source code
+# Clone the PostgreSQL upstream Git repository
 RUN cd /root ; git clone https://github.com/postgres/postgres
 
 # Enable X11Forwarding
@@ -39,5 +34,5 @@ RUN mkdir -p /var/run/sshd
 # expose ssh port
 EXPOSE 22
 
-# # Start ssh services.
+# Start ssh services.
 CMD ["/usr/sbin/sshd", "-D"]
