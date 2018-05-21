@@ -6,10 +6,11 @@
 
 declare -a v9_4=("9.4.0" "9.4.1" "9.4.2" "9.4.3" "9.4.4" "9.4.5" "9.4.6" "9.4.7" "9.4.8" "9.4.9")
 declare -a v9_5=("9.5.0" "9.5.1" "9.5.2" "9.5.3" "9.5.4" "9.5.5" "9.5.6" "9.5.7" "9.5.8" "9.5.9")
-declare -a v9_6=("9.6.0" "9.6.1" "9.6.2" "9.6.3" "9.6.4" "9.6.5" "9.6.6" "9.6.7" "9.6.8")
+declare -a v9_6=("9.6.0" "9.6.1" "9.6.2" "9.6.3" "9.6.4" "9.6.5" "9.6.6" "9.6.7" "9.6.8" "9.6.9")
 # declare -a versions=()
-declare -a versions=( "${v9_4[@]}" "${v9_6[@]}")
+# declare -a versions=( "${v9_4[@]}" "${v9_6[@]}")
 # declare -a versions=( "${v9_4[@]}" "${v9_5[@]}" "${v9_6[@]}" )
+declare -a versions=("9.4.0" "9.5.0" "9.6.2" "9.6.8")
 
 #
 # This function is intended to extract from the Pg server logs, the latest
@@ -108,14 +109,14 @@ case "$1" in
         done
         ;;
     shell_pg)
-        # Get a shell to a container using the postgres user
+        # Shell using the postgres user into the container
         # Ex: ./op shell_pg 9.6.8
-        docker exec -u postgres -t -i pg-$2 bash
+        docker exec -u postgres -t -i pg-$2 /bin/bash -c "export COLUMNS=`tput cols`; export LINES=`tput lines`; exec bash"
         ;;
     shell_root)
-        # Get a shell to a container using the root user
+        # Root shell into the container
         # Ex: ./op shell_root 9.6.8
-        docker exec -t -i pg-$2 bash
+        docker exec -t -i pg-$2 /bin/bash -c "export COLUMNS=`tput cols`; export LINES=`tput lines`; exec bash"
         ;;
     start_pg)
         # Starts the PostgreSQL server on all the containers
@@ -132,16 +133,55 @@ case "$1" in
             docker exec -u postgres -t -i pg-$ver bash -c '/usr/local/pgsql/bin/pg_ctl stop -D /var/lib/postgresql'
         done
         ;;
-    run_tests)
-        # Run the tests on all containers
+    run_pretest)
         for ver in "${versions[@]}"; do
             echo "Provisioning container pg-$ver to run tests"
             docker exec -t -i pg-$ver rm -rf /home/postgres/t/
             docker cp t/ pg-$ver:/home/postgres/
             docker exec -t -i pg-$ver chown -R postgres:postgres /home/postgres/t/
-            echo "Running tests on container pg-$ver"
+        done
+        ;;
+    run_t1)
+        # Run test related to persistence of settings in a functional index
+        # during a pg_restore operation
+        for ver in "${versions[@]}"; do
+            echo "Running t1 on pg-$ver"
             docker exec -u postgres -t -i pg-$ver bash /home/postgres/t/config-setting-persistence-index.sh
         done
+        ;;
+    run_t2)
+        # Run test related to compatibility of custom dump format 
+        # between different Pg versions
+
+        # 
+        # Create dbs on each container and dump them in their custom format.
+        # Copy the dumps outside the containers in a directory.
+        #
+        mkdir tmp_dmp/
+        for ver in "${versions[@]}"; do
+            echo "Creating db on pg-$ver"
+            docker exec -u postgres -t -i pg-$ver bash /home/postgres/t/dump-compat.sh
+            docker cp pg-$ver:/home/postgres/c1.dmp tmp_dmp/$ver.dmp
+        done
+
+        # Distribute the dumps to all containers
+        for ver in "${versions[@]}"; do
+            echo "Copying dump from pg-$ver"
+            docker cp tmp_dmp/ pg-$ver:/home/postgres/
+        done
+
+        # Now restore all the dumps on all the containers
+        # and get the exit code for each
+        for ver in "${versions[@]}"; do
+            echo "Running restores on pg-$ver"
+            docker exec -u postgres pg-$ver bash /home/postgres/t/dump-restore.sh
+        done
+        ;;
+    run_tests)
+        # Run the tests on all containers
+        $0 run_pretest
+        $0 run_t1
+        $0 run_t2
         ;;
     report)
         exec &> >(tee "t/config-setting-persistence-index.report.txt")
@@ -159,6 +199,16 @@ case "$1" in
             cnt=$(cat $tmpfile | grep "prefix.persist was not set" | wc -l)
             echo "pg-$ver,$cnt"
             rm $tmpfile
+        done
+
+        exec &> >(tee "t/dump-compatibility.report.txt")
+        echo "Report for custom format dump compatibility"
+        echo "==========================================="
+        echo ""
+
+        for ver in "${versions[@]}"; do
+            echo "Report from $ver"
+            docker exec -t pg-$ver cat /home/postgres/restore-report.txt
         done
         ;;
     *)

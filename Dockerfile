@@ -19,7 +19,8 @@ RUN dpkg --add-architecture amd64 \
     zlib1g-dev \
     libxml2-dev \
     libxml2-utils \
-    docbook 
+    docbook \
+    file
 
 # Set locale (fix locale warnings)
 RUN localedef -v -c -i en_US -f UTF-8 en_US.UTF-8 || :
